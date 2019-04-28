@@ -40,8 +40,8 @@ public class TestRunner {
         System.out.println("Количество тестов = " + testMethods.size());
         System.out.println("beforeAll = " + beforeAllMethods.size());
         System.out.println("afterAll = " + afterAllMethods.size());
-        System.out.println("beforeEach" + beforeEachMethods.size());
-        System.out.println("afterAll" + afterEachMethods.size());
+        System.out.println("beforeEach = " + beforeEachMethods.size());
+        System.out.println("afterAll = " + afterEachMethods.size());
 
         if(hasTestClassError){
             System.out.println(" Класс с тестами имеет ошибки");
