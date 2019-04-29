@@ -8,7 +8,7 @@ import ru.otus.testfw.annotations.*;
 public class AdditionalTests {
 
     @BeforeAll
-    public void beforeAll(){
+    public static void beforeAll(){
         System.out.println("Вызов beforeALl");
     }
 
@@ -29,7 +29,7 @@ public class AdditionalTests {
     }
 
     @AfterAll
-    public void afterAll(){
+    public static void afterAll(){
         System.out.println("Вызов afterAll");
     }
 

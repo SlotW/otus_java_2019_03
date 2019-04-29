@@ -2,7 +2,6 @@ package ru.otus.testfw;
 
 import ru.otus.testfw.annotations.*;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -36,11 +35,9 @@ public class TestRunner {
             System.out.println(" Класс с тестами имеет ошибки");
         } else {
 
-            T beforeAfterObject = testClazz.getConstructor().newInstance();
-
             if(beforeAllMethods.size() == 1){ //найти метод с аннотацией beforeAll и запустить
                 try{
-                    beforeAllMethods.get(0).invoke(beforeAfterObject);
+                    beforeAllMethods.get(0).invoke(null);
                     //если метод beforeAll выдал исключение не выполнять дальнейшие шаги тестов
                     for(Method testMethod:testMethods){ //для каждого метода с аннотацией Test выполнить следующие шаги
 
@@ -75,7 +72,7 @@ public class TestRunner {
 
             if(afterAllMethods.size() == 1){ //Если Test закончились найти и выполнить AfterAll
                 try{
-                    afterAllMethods.get(0).invoke(beforeAfterObject);
+                    afterAllMethods.get(0).invoke(null);
                 } catch (Exception e){
                     System.out.println("Сломался afterAll");
                 }

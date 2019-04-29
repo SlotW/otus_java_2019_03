@@ -14,12 +14,12 @@ public class ClassWithTests {
     }
 
     @BeforeAll
-    public void beforeAllTests(){
+    public static void beforeAllTests(){
         System.out.println("Вызов beforeAll");
     }
 
     @AfterAll
-    public void afterAllTests(){
+    public static void afterAllTests(){
         System.out.println("Вызов afterAll");
     }
 
