@@ -4,6 +4,7 @@ import ru.otus.testfw.annotations.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,8 @@ public class TestRunner {
 
             if(beforeAllMethods.size() == 1){ //найти метод с аннотацией beforeAll и запустить
                 try{
+                    if(!Modifier.isStatic(beforeAllMethods.get(0).getModifiers()))
+                        throw new RuntimeException("Метод " + beforeAllMethods.get(0).getName() + " не является статическим");
                     beforeAllMethods.get(0).invoke(null);
                     //если метод beforeAll выдал исключение не выполнять дальнейшие шаги тестов
                     for(Method testMethod:testMethods){ //для каждого метода с аннотацией Test выполнить следующие шаги
@@ -67,14 +70,18 @@ public class TestRunner {
                     }
                 } catch (Exception e){
                     System.out.println("Сломался beforeAll");
+                    System.out.println(e.getMessage());
                 }
             }
 
             if(afterAllMethods.size() == 1){ //Если Test закончились найти и выполнить AfterAll
                 try{
+                    if(!Modifier.isStatic(afterAllMethods.get(0).getModifiers()))
+                        throw new RuntimeException("Метод " + afterAllMethods.get(0).getName() + " не является статическим");
                     afterAllMethods.get(0).invoke(null);
                 } catch (Exception e){
                     System.out.println("Сломался afterAll");
+                    System.out.println(e.getMessage());
                 }
             }
 

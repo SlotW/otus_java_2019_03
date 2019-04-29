@@ -29,7 +29,7 @@ public class AdditionalTests {
     }
 
     @AfterAll
-    public static void afterAll(){
+    public void afterAll(){
         System.out.println("Вызов afterAll");
     }
 
