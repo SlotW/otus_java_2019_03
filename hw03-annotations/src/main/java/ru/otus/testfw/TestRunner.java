@@ -35,46 +35,41 @@ public class TestRunner {
         if(hasTestClassError){
             System.out.println(" Класс с тестами имеет ошибки");
         } else {
-            Constructor<T> constructor = testClazz.getConstructor();
-            T beforeAfterObject = constructor.newInstance();
 
-            boolean hasGlobalError = false;
+            T beforeAfterObject = testClazz.getConstructor().newInstance();
 
             if(beforeAllMethods.size() == 1){ //найти метод с аннотацией beforeAll и запустить
                 try{
                     beforeAllMethods.get(0).invoke(beforeAfterObject);
+                    //если метод beforeAll выдал исключение не выполнять дальнейшие шаги тестов
+                    for(Method testMethod:testMethods){ //для каждого метода с аннотацией Test выполнить следующие шаги
+
+                        T testObject = testClazz.getConstructor().newInstance();
+
+                        try {
+                            for (Method beforeMethod : beforeEachMethods) { //запустить все методы с аннотацией beforeEach
+                                beforeMethod.invoke(testObject);
+                            }
+                            try{
+                                testMethod.invoke(testObject); //запустить метод с аннотацией Test
+                            } catch (Exception e){
+                                System.out.println("Сломался test");
+                            }
+                        } catch (Exception e){
+                            System.out.println("Сломался beforeEach");
+                        }
+
+                        for(Method afterMethod:afterEachMethods){ //найти и выполнить afterEach
+                            try{
+                                afterMethod.invoke(testObject);
+                            } catch (Exception e){
+                                System.out.println("Сломался afterEach");
+                            }
+                        }
+
+                    }
                 } catch (Exception e){
-                    hasGlobalError = true;
                     System.out.println("Сломался beforeAll");
-                }
-            }
-            //если метод beforeAll выдал исключение не выполнять дальнейшие шаги тестов
-            if(!hasGlobalError){
-                for(Method testMethod:testMethods){ //для каждого метода с аннотацией Test выполнить следующие шаги
-
-                    T testObject = testClazz.getConstructor().newInstance();
-
-                    try {
-                        for (Method beforeMethod : beforeEachMethods) { //запустить все методы с аннотацией beforeEach
-                            beforeMethod.invoke(testObject);
-                        }
-                        try{
-                            testMethod.invoke(testObject); //запустить метод с аннотацией Test
-                        } catch (Exception e){
-                            System.out.println("Сломался test");
-                        }
-                    } catch (Exception e){
-                        System.out.println("Сломался beforeEach");
-                    }
-
-                    for(Method afterMethod:afterEachMethods){ //найти и выполнить afterEach
-                        try{
-                            afterMethod.invoke(testObject);
-                        } catch (Exception e){
-                            System.out.println("Сломался afterEach");
-                        }
-                    }
-
                 }
             }
 
