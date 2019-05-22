@@ -13,6 +13,7 @@
     <modules>
         <module>hw01-maven</module>
         <module>hw02-collection</module>
+        <module>hw03-annotations</module>
     </modules>
 
     <properties>
