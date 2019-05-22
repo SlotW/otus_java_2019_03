@@ -12,6 +12,7 @@ public class Something implements SomeActionInterface {
         System.out.println("Ничего не делаю");
     }
 
+    @Log
     @Override
     public void someAction(int number, String str){
         System.out.println("Чёт делаю");
