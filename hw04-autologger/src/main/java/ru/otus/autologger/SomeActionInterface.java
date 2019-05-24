@@ -7,9 +7,11 @@ import ru.otus.autologger.annotation.Log;
  */
 public interface SomeActionInterface {
 
-    void someAction(int number, String str);
+    void firstAction(int number, String str);
 
     @Log
     void secondAction(boolean flag);
+
+    void thirdAction();
 
 }

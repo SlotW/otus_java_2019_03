@@ -9,18 +9,23 @@ public class Something implements SomeActionInterface {
 
     @Log
     public void someAction(){
-        System.out.println("Ничего не делаю");
+        System.out.println("someAction: Не логируюсь");
     }
 
     @Log
     @Override
-    public void someAction(int number, String str){
-        System.out.println("Чёт делаю");
+    public void firstAction(int number, String str){
+        System.out.println("firstAction: Логируюсь, @Log в классе");
     }
 
     @Override
     public void secondAction(boolean flag) {
-        System.out.println("Делаю всё!");
+        System.out.println("secondAction: Логируюсь, @Log в интерфейсе");
+    }
+
+    @Override
+    public void thirdAction() {
+        System.out.println("thirdAction: Не логируюсь, @Log отсутствует");
     }
 
 }
