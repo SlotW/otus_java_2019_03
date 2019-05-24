@@ -8,7 +8,7 @@ import ru.otus.autologger.annotation.Log;
 public class Something implements SomeActionInterface {
 
     @Log
-    public void someAction(){
+    public void thirdAction(float some){
         System.out.println("someAction: Не логируюсь");
     }
 
