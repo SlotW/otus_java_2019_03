@@ -7,8 +7,9 @@ public class AutologgerMain {
 
     public static void main(String[] args){
         SomeActionInterface something = FabricObjects.getSomething();
-        something.someAction(3, "Три");
+        something.firstAction(3, "Три");
         something.secondAction(true);
+        something.thirdAction();
     }
 
 }
