@@ -15,7 +15,7 @@
         <module>hw02-collection</module>
         <module>hw03-annotations</module>
         <module>hw04-autologger</module>
-        <module>hw-05gc</module>
+        <module>hw05-gc</module>
     </modules>
 
     <properties>
