@@ -17,6 +17,9 @@ public class Analizer {
         printStat("./logs/SGC_1.log");
         printStat("./logs/PGC_1.log");
         printStat("./logs/G1_1.log");
+        printStat("./logs/SGC_add.log");
+        printStat("./logs/PGC_add.log");
+        printStat("./logs/G1_add.log");
     }
 
     public static void printStat(String filePath){
