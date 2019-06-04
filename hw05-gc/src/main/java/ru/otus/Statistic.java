@@ -52,11 +52,11 @@ public class Statistic{
     }
 
     public Float getMinPauseFullTime() {
-        return fullPauses.stream().min(Float::compareTo).get();
+        return fullPauses.stream().min(Float::compareTo).orElse(0f);
     }
 
     public Float getMaxPausesFullTime() {
-        return fullPauses.stream().max(Float::compareTo).get();
+        return fullPauses.stream().max(Float::compareTo).orElse(0f);
     }
 
     public Float getAveragePausesOtherTime() {

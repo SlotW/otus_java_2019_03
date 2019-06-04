@@ -14,19 +14,25 @@ import java.util.regex.Pattern;
 public class Analizer {
 
     public static void main(String[] args){
-        printStat("./logs/SGC_1.log");
+        /*printStat("./logs/SGC_1.log");
         printStat("./logs/PGC_1.log");
         printStat("./logs/G1_1.log");
         printStat("./logs/SGC_add.log");
         printStat("./logs/PGC_add.log");
         printStat("./logs/G1_add.log");
+        printStat("./logs/SGC_2.log");
+        printStat("./logs/PGC_2.log");
+        printStat("./logs/G1_2.log");*/
+        printStat("./logs/SGC_3.log");
+        printStat("./logs/PGC_3.log");
+        printStat("./logs/G1_3.log");
     }
 
     public static void printStat(String filePath){
         Statistic stat = new Statistic();
-        Pattern patternForYoung = Pattern.compile(".*(Pause Young).* (\\d{1,5}\\.\\d{0,4})ms");
-        Pattern patternForFull = Pattern.compile(".*(Pause Full).* (\\d{1,5}\\.\\d{0,4})ms");
-        Pattern patternForOther = Pattern.compile(".*(Pause ((Remark)|(Cleanup))).* (\\d{1,5}\\.\\d{0,4})ms");
+        Pattern patternForYoung = Pattern.compile(".*\\[(\\d{1,5})\\.\\d{0,4}s.*(Pause Young).* (\\d{1,5}\\.\\d{0,4})ms");
+        Pattern patternForFull = Pattern.compile(".*\\[(\\d{1,5})\\.\\d{0,4}s.*(Pause Full).* (\\d{1,5}\\.\\d{0,4})ms");
+        Pattern patternForOther = Pattern.compile(".*\\[(\\d{1,5})\\.\\d{0,4}s.*(Pause ((Remark)|(Cleanup))).* (\\d{1,5}\\.\\d{0,4})ms");
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
                         new FileInputStream(filePath), StandardCharsets.UTF_8))){
@@ -35,14 +41,14 @@ public class Analizer {
                 Matcher matcherYoung = patternForYoung.matcher(line);
                 Matcher matcherFull = patternForFull.matcher(line);
                 Matcher matcherOther = patternForOther.matcher(line);
-                if(matcherYoung.find()){
-                    stat.youngPauses.add(Float.valueOf(matcherYoung.group(2)));
+                if(matcherYoung.find() && Integer.valueOf(matcherYoung.group(1)) <= 250){
+                    stat.youngPauses.add(Float.valueOf(matcherYoung.group(3)));
                 } else
-                if(matcherFull.find()){
-                    stat.fullPauses.add(Float.valueOf(matcherFull.group(2)));
+                if(matcherFull.find() && Integer.valueOf(matcherFull.group(1)) <= 250){
+                    stat.fullPauses.add(Float.valueOf(matcherFull.group(3)));
                 } else
-                if(matcherOther.find()){
-                    stat.otherPauses.add(Float.valueOf(matcherOther.group(5)));
+                if(matcherOther.find() && Integer.valueOf(matcherOther.group(1)) <= 250){
+                    stat.otherPauses.add(Float.valueOf(matcherOther.group(6)));
                 }
             }
         } catch (IOException e) {
