@@ -49,13 +49,13 @@ public class ATM {
                 cashOutMap.forEach((key, value) -> {
                     if((Integer)value > 0) System.out.println("Номинал:" + key + ", количество: " + value);
                 });
-                reCalculate(cashOutMap);
+                recalculateCashOut(cashOutMap);
                 System.out.println("Выдана сумма " + summ);
             }
         }
     }
 
-    private void reCalculate(Map cashOutMap){
+    private void recalculateCashOut(Map cashOutMap){
         cassettes.forEach(x->{
             if(cashOutMap.containsKey(x.getNominal()) && (Integer)cashOutMap.get(x.getNominal()) > 0){
                 int dif = x.getCountNote() - (Integer) cashOutMap.get(x.getNominal());
