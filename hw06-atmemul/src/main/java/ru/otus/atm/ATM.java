@@ -16,6 +16,10 @@ public class ATM {
         cashOutBehavior = new MinBanknoteBehavior();
     }
 
+    public void setCashOutBehavior(CashOutBehavior cashOutBehavior){
+        this.cashOutBehavior = cashOutBehavior;
+    }
+
     public void loadCassette(Cassette cassette){
         cassettes.add(cassette);
     }
