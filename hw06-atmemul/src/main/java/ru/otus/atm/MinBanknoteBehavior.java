@@ -8,21 +8,21 @@ import java.util.*;
 public class MinBanknoteBehavior implements CashOutBehavior {
 
     @Override
-    public Map calculateBanknote(List<Cassette> cassettes, int summ) {
-        Map<Integer, Integer> result = new HashMap<>();
+    public BundleOfBanknotes getBundleToCashOut(List<Cassette> cassettes, int summ) {
         cassettes.sort(Comparator.comparing(Cassette::getNominal));
         Collections.reverse(cassettes);
+        BundleOfBanknotes resultBundle = new BundleOfBanknotes();
         for(Cassette cassette: cassettes){
-            if(!result.containsKey(cassette.getNominal())) result.put(cassette.getNominal(), 0);
-            while (cassette.getBalance() > 0 && cassette.getNominal() <= summ && summ > 0){
-                result.replace(cassette.getNominal(), result.get(cassette.getNominal()) + 1);
+            int countInCassette = cassette.getCountNote();
+            while (countInCassette > 0 && cassette.getNominal() <= summ && summ > 0){
+                resultBundle.addBanknote(new Banknote(cassette.getNominal()));
                 summ -= cassette.getNominal();
+                countInCassette--;
             }
         }
-        if(summ == 0){
-            return result;
-        } else {
-            return new HashMap();
+        if(summ != 0){
+            resultBundle.getBanknotes().clear();
         }
+        return resultBundle;
     }
 }

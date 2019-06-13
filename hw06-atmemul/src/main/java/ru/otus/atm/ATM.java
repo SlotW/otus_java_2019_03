@@ -1,8 +1,10 @@
 package ru.otus.atm;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by Alexandr Byankin on 27.05.2019
@@ -41,22 +43,34 @@ public class ATM {
         if(summ > getBalanceAtm()){
             System.out.println("Запрошенная сумма превышает наличие денег в банкомате на " + String.valueOf(summ - getBalanceAtm()));
         } else {
-            Map cashOutMap = cashOutBehavior.calculateBanknote(cassettes, summ);
-            if(cashOutMap.isEmpty()){
+            BundleOfBanknotes bundleToCashOut = cashOutBehavior.getBundleToCashOut(cassettes, summ);
+            if(bundleToCashOut.getBanknotes().isEmpty()){
                 System.out.println("Невозможно выдать деньги текущим набором банкнот");
             } else {
                 System.out.println("К выдаче");
-                cashOutMap.forEach((key, value) -> {
-                    if((Integer)value > 0) System.out.println("Номинал:" + key + ", количество: " + value);
+                Map groupedBundle = (Map) bundleToCashOut.getBanknotes().stream()
+                        .collect(Collectors.groupingBy(Banknote::getNominal, Collectors.counting()));
+                ((Map) bundleToCashOut.getBanknotes().stream()
+                        .collect(Collectors.groupingBy(Banknote::getNominal, Collectors.counting())))
+                        .forEach((key, value) -> {
+                    System.out.println("Номинал:" + key + ", количество: " + value);
                 });
-                recalculateCashOut(cashOutMap);
+                recalculateCashOut(bundleToCashOut);
                 System.out.println("Выдана сумма " + summ);
             }
         }
     }
 
-    private void recalculateCashOut(Map cashOutMap){
-        cassettes.forEach(x->{
+    private void recalculateCashOut(BundleOfBanknotes cashOutBundle){
+        for(Object banknote: cashOutBundle.getBanknotes()){
+            for(Cassette cassette: cassettes){
+                if(cassette.getBalance() > 0 && cassette.getNominal() == ((Banknote) banknote).getNominal()){
+                    cassette.removeNote(1);
+                    break;
+                }
+            }
+        }
+        /*cassettes.forEach(x->{
             if(cashOutMap.containsKey(x.getNominal()) && (Integer)cashOutMap.get(x.getNominal()) > 0){
                 int dif = x.getCountNote() - (Integer) cashOutMap.get(x.getNominal());
                 if(dif < 0) {
@@ -67,7 +81,7 @@ public class ATM {
                     cashOutMap.replace(x.getNominal(), 0);
                 }
             }
-        });
+        });*/
     }
 
     public int getBalanceAtm(){

@@ -8,6 +8,6 @@ import java.util.Map;
  */
 public interface CashOutBehavior {
 
-    public Map calculateBanknote(List<Cassette> cassettes, int summ);
+    public BundleOfBanknotes getBundleToCashOut(List<Cassette> cassettes, int summ);
 
 }
