@@ -8,9 +8,9 @@ import java.util.List;
  */
 public class BundleOfBanknotes {
 
-    private final List banknotes = new ArrayList();
+    private final List<Banknote> banknotes = new ArrayList<>();
 
-    public List getBanknotes(){
+    public List<Banknote> getBanknotes(){
         return banknotes;
     }
 

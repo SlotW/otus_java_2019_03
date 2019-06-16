@@ -8,7 +8,7 @@ public class Cassette {
     private int nominal = 0;
     private int countNote = 0;
 
-    public Cassette(){
+    private Cassette(){
 
     }
 

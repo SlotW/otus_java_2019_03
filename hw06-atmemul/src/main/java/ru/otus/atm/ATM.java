@@ -48,10 +48,8 @@ public class ATM {
                 System.out.println("Невозможно выдать деньги текущим набором банкнот");
             } else {
                 System.out.println("К выдаче");
-                Map groupedBundle = (Map) bundleToCashOut.getBanknotes().stream()
-                        .collect(Collectors.groupingBy(Banknote::getNominal, Collectors.counting()));
-                ((Map) bundleToCashOut.getBanknotes().stream()
-                        .collect(Collectors.groupingBy(Banknote::getNominal, Collectors.counting())))
+                bundleToCashOut.getBanknotes().stream()
+                        .collect(Collectors.groupingBy(Banknote::getNominal, Collectors.counting()))
                         .forEach((key, value) -> {
                     System.out.println("Номинал:" + key + ", количество: " + value);
                 });
