@@ -5,36 +5,36 @@ package ru.otus.atm;
  */
 public class Cassette {
 
-    private int nominal = 0;
-    private int countNote = 0;
+    private Banknote banknote;
+    private int countBanknote = 0;
 
     private Cassette(){
 
     }
 
-    public Cassette(int nominal, int countNote){
-        this.nominal = nominal;
-        this.countNote = countNote;
+    public Cassette(Banknote banknote, int countBanknote){
+        this.banknote = banknote;
+        this.countBanknote = countBanknote;
     }
 
     public int getNominal(){
-        return nominal;
+        return banknote.getNominal();
     }
 
     public int getCountNote() {
-        return countNote;
+        return countBanknote;
     }
 
-    public void addNote(int countAddNote){
-        countNote += countAddNote;
+    public void addNote(int countAddBanknote){
+        countBanknote += countAddBanknote;
     }
 
-    public void removeNote(int countRemoveNote){
-        countNote -= countRemoveNote;
+    public void removeNote(int countRemoveBanknote){
+        countBanknote -= countRemoveBanknote;
     }
 
     public int getBalance(){
-        return nominal * countNote;
+        return banknote.getNominal() * countBanknote;
     }
 
 }
