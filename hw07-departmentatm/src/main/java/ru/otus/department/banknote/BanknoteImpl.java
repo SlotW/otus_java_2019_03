@@ -1,12 +1,14 @@
-package ru.otus.banknote;
+package ru.otus.department.banknote;
 
-import ru.otus.banknote.enums.Currency;
-import ru.otus.banknote.enums.Nominal;
+import ru.otus.department.banknote.enums.Currency;
+import ru.otus.department.banknote.enums.Nominal;
+
+import java.io.Serializable;
 
 /**
  * Created by Alexandr Byankin on 13.06.2019
  */
-public class BanknoteImpl implements Banknote {
+public class BanknoteImpl implements Banknote, Serializable {
 
     private Nominal nominal;
     private Currency currency;

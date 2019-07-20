@@ -1,13 +1,15 @@
-package ru.otus.atm;
+package ru.otus.department.atm;
 
-import ru.otus.banknote.Banknote;
-import ru.otus.banknote.BanknoteImpl;
-import ru.otus.banknote.BundleOfBanknotes;
+import ru.otus.department.banknote.Banknote;
+import ru.otus.department.banknote.BanknoteImpl;
+import ru.otus.department.banknote.BundleOfBanknotes;
+
+import java.io.Serializable;
 
 /**
  * Created by Alexandr Byankin on 27.05.2019
  */
-public class Cassette {
+public class Cassette implements Serializable {
 
     private Banknote banknote;
     private BundleOfBanknotes bundleOfBanknotes = new BundleOfBanknotes();

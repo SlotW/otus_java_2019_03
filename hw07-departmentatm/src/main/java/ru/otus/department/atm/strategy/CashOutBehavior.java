@@ -1,7 +1,8 @@
-package ru.otus.atm;
+package ru.otus.department.atm.strategy;
 
-import ru.otus.banknote.BundleOfBanknotes;
-import ru.otus.banknote.enums.Currency;
+import ru.otus.department.atm.Cassette;
+import ru.otus.department.banknote.BundleOfBanknotes;
+import ru.otus.department.banknote.enums.Currency;
 
 import java.util.List;
 

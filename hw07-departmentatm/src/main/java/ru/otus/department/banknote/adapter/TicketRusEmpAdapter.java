@@ -1,7 +1,10 @@
-package ru.otus.banknote;
+package ru.otus.department.banknote.adapter;
 
-import ru.otus.banknote.enums.Currency;
-import ru.otus.banknote.enums.Nominal;
+import ru.otus.department.banknote.Banknote;
+import ru.otus.department.banknote.SimpleEqBanknotesImpl;
+import ru.otus.department.banknote.TicketRussianEmpire;
+import ru.otus.department.banknote.enums.Currency;
+import ru.otus.department.banknote.enums.Nominal;
 
 /**
  * Created by Alexandr Byankin on 19.06.2019

@@ -1,4 +1,4 @@
-package ru.otus.banknote;
+package ru.otus.department.banknote;
 
 /**
  * Created by Alexandr Byankin on 18.06.2019

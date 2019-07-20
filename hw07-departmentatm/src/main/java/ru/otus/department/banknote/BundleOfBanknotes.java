@@ -1,12 +1,13 @@
-package ru.otus.banknote;
+package ru.otus.department.banknote;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Alexandr Byankin on 13.06.2019
  */
-public class BundleOfBanknotes {
+public class BundleOfBanknotes implements Serializable {
 
     private final Map<Banknote, Integer> banknotes = new HashMap<>();
 
@@ -29,6 +30,15 @@ public class BundleOfBanknotes {
     }
 
     public int getCountBanknotes(){
-        return banknotes.size();
+        return banknotes.values().stream().reduce(0, (x,y)->x+y);
+    }
+
+    public String toString(){
+        return "====Пачка банкнот====\n" + banknotes.entrySet().stream()
+                .map(x->"Валюта: " + x.getKey().getCurrency().getName()
+                        + "\nНоминал: " + x.getKey().getNominal().getValue()
+                        + "\nКоличество банкнот: " + x.getValue())
+                .reduce("", (x,y)->x + y + "\n")
+                + "=======end=======";
     }
 }

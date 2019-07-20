@@ -1,9 +1,10 @@
-package ru.otus.atm;
+package ru.otus.department.atm.strategy;
 
-import ru.otus.banknote.BanknoteImpl;
-import ru.otus.banknote.BundleOfBanknotes;
-import ru.otus.banknote.enums.Currency;
+import ru.otus.department.atm.Cassette;
+import ru.otus.department.banknote.BundleOfBanknotes;
+import ru.otus.department.banknote.enums.Currency;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Alexandr Byankin on 27.05.2019
  */
-public class MinBanknoteBehavior implements CashOutBehavior {
+public class MinBanknoteBehavior implements CashOutBehavior, Serializable {
 
     @Override
     public BundleOfBanknotes getBundleToCashOut(Currency currency, int summ, List<Cassette> cassettes) {

@@ -1,4 +1,4 @@
-package ru.otus.banknote.enums;
+package ru.otus.department.banknote.enums;
 
 /**
  * Created by Alexandr Byankin on 18.06.2019

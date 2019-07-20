@@ -1,4 +1,4 @@
-package ru.otus.banknote.enums;
+package ru.otus.department.banknote.enums;
 
 /**
  * Created by Alexandr Byankin on 18.06.2019
@@ -9,14 +9,14 @@ public enum Currency {
     USD("Доллар США"),
     OLD_RUB("Билет банка Российской империи");
 
-    private String currency;
+    private String name;
 
-    Currency(String currency){
-        this.currency = currency;
+    Currency(String name){
+        this.name = name;
     }
 
-    public String getCurrency(){
-        return currency;
+    public String getName(){
+        return name;
     }
 
 }
