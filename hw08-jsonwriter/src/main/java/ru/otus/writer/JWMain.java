@@ -24,11 +24,11 @@ public class JWMain {
 
         System.out.println(something);
 
-        String json = JsonWriterCustom.objectToJson(something).toString();
+        String json = JsonWriterCustom.objectToJsonString(something);
         System.out.println("json = " + json);
 
         Gson gson = new Gson();
-        Something deserObj = (Something)gson.fromJson(json, Something.class);
+        Something deserObj = gson.fromJson(json, Something.class);
         System.out.println(deserObj);
     }
 }

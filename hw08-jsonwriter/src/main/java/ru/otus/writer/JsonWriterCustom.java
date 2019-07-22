@@ -11,7 +11,11 @@ import java.util.Collection;
 
 public class JsonWriterCustom {
 
-    public static JsonObject objectToJson(Object object) {
+    public static String objectToJsonString(Object object){
+        return objectToJsonObject(object).toString();
+    }
+
+    private static JsonObject objectToJsonObject(Object object) {
         JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
 
         if (object != null) {
@@ -38,13 +42,13 @@ public class JsonWriterCustom {
                         if(Arrays.asList(field.getType().getInterfaces()).contains(Collection.class)){ //если коллекция
                             JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
                             for (Object objColl : (Collection) fieldObject) {
-                                jsonArrayBuilder.add(objectToJson(objColl));
+                                jsonArrayBuilder.add(objectToJsonObject(objColl));
                             }
                             jsonObjectBuilder.add(fieldName, jsonArrayBuilder);
                         } else if("java.lang.String".equals(field.getType().getName())){ //если строка
                             jsonObjectBuilder.add(fieldName, fieldObject.toString());
                         } else { //всё остальное
-                            jsonObjectBuilder.add(fieldName, objectToJson(fieldObject));
+                            jsonObjectBuilder.add(fieldName, objectToJsonObject(fieldObject));
                         }
                     }
 
@@ -117,7 +121,7 @@ public class JsonWriterCustom {
                 } else if("java.lang.String".equals(nameType)){
                     jsonArrayBuilder.add((String) Array.get(array, i));
                 } else {
-                    jsonArrayBuilder.add(objectToJson(Array.get(array, i)));
+                    jsonArrayBuilder.add(objectToJsonObject(Array.get(array, i)));
                 }
             }
         }
