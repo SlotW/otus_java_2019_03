@@ -17,6 +17,7 @@
         <module>hw04-autologger</module>
         <module>hw05-gc</module>
         <module>hw06-atmemul</module>
+        <module>hw08-jsonwriter</module>
     </modules>
 
     <properties>
