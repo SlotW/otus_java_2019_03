@@ -6,16 +6,43 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 
 public class JsonWriterCustom {
 
     public static String objectToJsonString(Object object){
+        if (object == null) return "null";
+        Class clazzObject = object.getClass();
+        if (Arrays.asList
+                (
+                        Byte.class, Short.class,
+                        Integer.class, Long.class,
+                        Float.class, Double.class,
+                        Boolean.class
+                ).contains(clazzObject)
+        ) return object.toString();
+        if(Character.class.equals(clazzObject) || String.class.equals(clazzObject)) return "\"" + object.toString() + "\"";
+        if (clazzObject.isArray()){
+            int sizeArr = Array.getLength(object);
+            List<String> result = new ArrayList<>();
+                for(int i = 0; i < sizeArr; i++){
+                    result.add(objectToJsonString(Array.get(object, i)));
+                }
+                return "[" + result.stream().reduce((x,y)-> x + "," + y).orElse("") + "]";
+        }
+        if (Arrays.asList(clazzObject.getInterfaces()).contains(Collection.class)
+                || Collections.singletonList(null).getClass().equals(clazzObject)
+                || List.of().getClass().equals(clazzObject)){
+            List<String> result = new ArrayList<>();
+            for(Object objColl : (Collection)object){
+                result.add(objectToJsonString(objColl));
+            }
+            return "[" + result.stream().reduce((x,y)-> x + "," + y).orElse("") + "]";
+        }
         return objectToJsonObject(object).toString();
     }
 
-    private static JsonObject objectToJsonObject(Object object) {
+    private static JsonObject objectToJsonObject(Object object) { // до вызова доходим, когда убеждаемся, что объект необходимо разобрать по полям
         JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
 
         if (object != null) {
@@ -67,24 +94,15 @@ public class JsonWriterCustom {
             e.printStackTrace();
         }
         if (fieldObject != null){
-            String nameType = field.getType().getName();
-            if("int".equals(nameType)){
-                jsonObjectBuilder.add(field.getName(), (int) fieldObject);
-            } else if ("short".equals(nameType)){
-                jsonObjectBuilder.add(field.getName(), (short) fieldObject);
-            } else if ("byte".equals(nameType)){
-                jsonObjectBuilder.add(field.getName(), (byte) fieldObject);
-            } else if ("long".equals(nameType)){
-                jsonObjectBuilder.add(field.getName(), (long) fieldObject);
-            } else if ("boolean".equals(nameType)){
-                jsonObjectBuilder.add(field.getName(), (boolean) fieldObject);
-            } else if ("char".equals(nameType)){
-                jsonObjectBuilder.add(field.getName(), (char) fieldObject);
-            } else if ("float".equals(nameType)){
-                jsonObjectBuilder.add(field.getName(), (float) fieldObject);
-            } else if ("double".equals(nameType)){
-                jsonObjectBuilder.add(field.getName(), (double) fieldObject);
-            }
+            Class clazzFieldObject = fieldObject.getClass();
+            if(Integer.class.equals(clazzFieldObject)) jsonObjectBuilder.add(field.getName(), (int) fieldObject);
+            if (Short.class.equals(clazzFieldObject)) jsonObjectBuilder.add(field.getName(), (short) fieldObject);
+            if (Byte.class.equals(clazzFieldObject)) jsonObjectBuilder.add(field.getName(), (byte) fieldObject);
+            if (Long.class.equals(clazzFieldObject)) jsonObjectBuilder.add(field.getName(), (long) fieldObject);
+            if (Boolean.class.equals(clazzFieldObject)) jsonObjectBuilder.add(field.getName(), (boolean) fieldObject);
+            if (Character.class.equals(clazzFieldObject)) jsonObjectBuilder.add(field.getName(), (char) fieldObject);
+            if (Float.class.equals(clazzFieldObject))jsonObjectBuilder.add(field.getName(), (float) fieldObject);
+            if (Double.class.equals(clazzFieldObject)) jsonObjectBuilder.add(field.getName(), (double) fieldObject);
         }
         return jsonObjectBuilder;
     }
@@ -99,26 +117,19 @@ public class JsonWriterCustom {
         }
 
         if(array != null){
-            String nameType = field.getType().getComponentType().getName();
+            Class clazzType = field.getType().getComponentType();
             int sizeArr = Array.getLength(array);
             for(int i = 0; i < sizeArr; i++){
-                if("int".equals(nameType)){
-                    jsonArrayBuilder.add(Array.getInt(array, i));
-                } else if("byte".equals(nameType)){
-                    jsonArrayBuilder.add(Array.getByte(array, i));
-                } else if("short".equals(nameType)){
-                    jsonArrayBuilder.add(Array.getShort(array, i));
-                } else if ("long".equals(nameType)){
-                    jsonArrayBuilder.add(Array.getLong(array, i));
-                } else if ("boolean".equals(nameType)){
-                    jsonArrayBuilder.add(Array.getBoolean(array, i));
-                } else if ("double".equals(nameType)){
-                    jsonArrayBuilder.add(Array.getDouble(array, i));
-                } else if ("float".equals(nameType)){
-                    jsonArrayBuilder.add(Array.getFloat(array, i));
-                } else if ("char".equals(nameType)){
-                    jsonArrayBuilder.add(Array.getChar(array, i));
-                } else if("java.lang.String".equals(nameType)){
+                if(clazzType.isPrimitive()) {
+                    if(int.class.equals(clazzType)) jsonArrayBuilder.add(Array.getInt(array, i));
+                    if(byte.class.equals(clazzType)) jsonArrayBuilder.add(Array.getByte(array, i));
+                    if(short.class.equals(clazzType)) jsonArrayBuilder.add(Array.getShort(array, i));
+                    if (long.class.equals(clazzType)) jsonArrayBuilder.add(Array.getLong(array, i));
+                    if (boolean.class.equals(clazzType)) jsonArrayBuilder.add(Array.getBoolean(array, i));
+                    if (double.class.equals(clazzType)) jsonArrayBuilder.add(Array.getDouble(array, i));
+                    if (float.class.equals(clazzType)) jsonArrayBuilder.add(Array.getFloat(array, i));
+                    if (char.class.equals(clazzType)) jsonArrayBuilder.add(Array.getChar(array, i));
+                } else if (String.class.equals(clazzType)) {
                     jsonArrayBuilder.add((String) Array.get(array, i));
                 } else {
                     jsonArrayBuilder.add(objectToJsonObject(Array.get(array, i)));
