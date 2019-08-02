@@ -28,8 +28,9 @@ public class DbExecutorImpl<T> implements DbExecutor<T> {
     }
 
     @Override
-    public Optional<T> select(String sql, Function<ResultSet, T> rsHandler) throws SQLException {
+    public Optional<T> select(String sql, long id, Function<ResultSet, T> rsHandler) throws SQLException {
         try (PreparedStatement pst = this.connection.prepareStatement(sql)) {
+            pst.setLong(1, id);
             try (ResultSet rs = pst.executeQuery()) {
                 return Optional.ofNullable(rsHandler.apply(rs));
             }
@@ -43,9 +44,6 @@ public class DbExecutorImpl<T> implements DbExecutor<T> {
                 pst.setString(idx + 1, params.get(idx));
             }
             pst.executeUpdate();
-            try (ResultSet rs = pst.getGeneratedKeys()) {
-                rs.next();
-            }
         } catch (SQLException ex) {
             this.connection.rollback(savePoint);
             System.out.println(ex.getMessage());

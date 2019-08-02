@@ -11,8 +11,8 @@ import java.util.function.Function;
  */
 public interface DbExecutor<T> {
 
-    public void insert(String sql, List<String> params) throws SQLException;
-    public void update(String sql, List<String> params) throws SQLException;
-    public Optional<T> select(String sql, Function<ResultSet, T> rsHandler) throws SQLException;
+    void insert(String sql, List<String> params) throws SQLException;
+    void update(String sql, List<String> params) throws SQLException;
+    Optional<T> select(String sql, long id, Function<ResultSet, T> rsHandler) throws SQLException;
 
 }

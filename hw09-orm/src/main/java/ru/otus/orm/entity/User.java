@@ -1,4 +1,4 @@
-package ru.otus.orm.dao;
+package ru.otus.orm.entity;
 
 import ru.otus.orm.annotations.Id;
 
@@ -32,7 +32,10 @@ public class User {
 
     @Override
     public String toString(){
-        return "UserRow: [id=" + id + " | name=" + (name == null ? "null" : name) + " | age=" + age + "]";
+        return "UserRow: [" +
+                "id=" + id + " | " +
+                "name=" + (name == null ? "null" : name) + " | " +
+                "age=" + age + "]";
     }
 
 }

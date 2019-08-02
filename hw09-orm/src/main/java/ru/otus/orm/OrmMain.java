@@ -1,15 +1,15 @@
 package ru.otus.orm;
 
-import ru.otus.orm.dao.Account;
-import ru.otus.orm.dao.User;
-import ru.otus.orm.jdbctemplate.JdbcTemplate;
+import ru.otus.orm.entity.Account;
+import ru.otus.orm.entity.User;
+import ru.otus.orm.jdbctemplate.JdbcTemplateImpl;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,32 +22,47 @@ public class OrmMain {
     public static void main(String... args) throws SQLException {
         Connection connection = getConnection();
         createTable(connection);
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(connection);
+        JdbcTemplateImpl jdbcTemplate = new JdbcTemplateImpl(connection);
 
-        getPoolAccaunts().forEach(x->{
-            try {
-                jdbcTemplate.create(x);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+        for(User user:getPoolUsers()){
+            jdbcTemplate.create(user);
+        }
 
+        System.out.println(jdbcTemplate.load(0, User.class));
+        System.out.println(jdbcTemplate.load(1, User.class));
         System.out.println(jdbcTemplate.load(2, User.class));
+        System.out.println(jdbcTemplate.load(3, User.class));
 
         jdbcTemplate.update(new User(2, "Имя сменил", 111));
 
+        System.out.println(jdbcTemplate.load(1, User.class));
         System.out.println(jdbcTemplate.load(2, User.class));
+        System.out.println(jdbcTemplate.load(3, User.class));
+        System.out.println(jdbcTemplate.load(4, User.class));
 
-        /*getPoolAccaunts().forEach(x-> {
-            try {
-                jdbcTemplate.create(x);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+        jdbcTemplate.createOrUpdate(new User(1, "Апдейт существующей", 0));
+        jdbcTemplate.createOrUpdate(new User(4, "Создание новой", 555));
 
-        System.out.println(jdbcTemplate.load(2, User.class));*/
+        System.out.println(jdbcTemplate.load(1, User.class));
+        System.out.println(jdbcTemplate.load(2, User.class));
+        System.out.println(jdbcTemplate.load(3, User.class));
+        System.out.println(jdbcTemplate.load(4, User.class));
 
+        for(Account account:getPoolAccaunts()){
+            jdbcTemplate.create(account);
+        }
+
+        System.out.println(jdbcTemplate.load(1, Account.class));
+        System.out.println(jdbcTemplate.load(2, Account.class));
+        System.out.println(jdbcTemplate.load(3, Account.class));
+
+        jdbcTemplate.createOrUpdate(new Account(3, "changeType", new BigDecimal(10)));
+
+        System.out.println(jdbcTemplate.load(1, Account.class));
+        System.out.println(jdbcTemplate.load(2, Account.class));
+        System.out.println(jdbcTemplate.load(3, Account.class));
+
+        connection.close();
     }
 
 
@@ -62,7 +77,7 @@ public class OrmMain {
         try (PreparedStatement pst = connection.prepareStatement("create table user(id bigint(20) NOT NULL auto_increment, name varchar(255), age int(3))")) {
             pst.executeUpdate();
         }
-        try (PreparedStatement pst = connection.prepareStatement("create table user(no bigint(20) NOT NULL auto_increment, type varchar(255), rest number)")) {
+        try (PreparedStatement pst = connection.prepareStatement("create table account(no bigint(20) NOT NULL auto_increment, type varchar(255), rest number)")) {
             pst.executeUpdate();
         }
     }
@@ -77,9 +92,9 @@ public class OrmMain {
 
     private static List<Account> getPoolAccaunts(){
         List<Account> accounts = new ArrayList<>();
-        accounts.add(new Account(0, "Temp", 10));
-        accounts.add(new Account(0, "Temp", 11));
-        accounts.add(new Account(0, "Technical", 100));
+        accounts.add(new Account(0, "Temp", new BigDecimal(10)));
+        accounts.add(new Account(0, "Temp", new BigDecimal(11)));
+        accounts.add(new Account(0, "Technical", new BigDecimal(100)));
         return accounts;
     }
 
