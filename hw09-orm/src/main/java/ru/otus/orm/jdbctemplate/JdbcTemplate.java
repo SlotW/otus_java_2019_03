@@ -8,5 +8,6 @@ public interface JdbcTemplate<T> {
     void update(T object) throws SQLException;
     T load(long id, Class<T> clazz) throws SQLException;
     void createOrUpdate(T object) throws SQLException;
+    boolean isExists(long id, Class clazz) throws SQLException;
 
 }
