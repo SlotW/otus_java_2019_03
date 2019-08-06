@@ -8,17 +8,17 @@ import java.util.*;
 /**
  * Created by Alexandr Byankin on 22.07.2019
  */
-public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
+public class JdbcTemplateImpl implements JdbcTemplate {
 
-    private final DbExecutor<T> executor;
-    private final Set<EntityDecomposite> decomposites = new HashSet<>();
+    private final DbExecutor executor;
+    private final Map<Class, EntityDecomposite> decomposites = new HashMap<>();
 
     public JdbcTemplateImpl(Connection connection) {
         this.executor = new DbExecutorImpl(connection);
     }
 
     @Override
-    public void create(T object) throws SQLException {
+    public <T> void create(T object) throws SQLException {
         if (object != null) {
             EntityDecomposite entityDecomposite = findOrCreateEntityDecomposite(object.getClass());
             if(entityDecomposite.correctEntityClass)
@@ -29,7 +29,7 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
     }
 
     @Override
-    public void update(T object) throws SQLException {
+    public <T> void update(T object) throws SQLException {
         if (object != null) {
             EntityDecomposite entityDecomposite = findOrCreateEntityDecomposite(object.getClass());
             if(entityDecomposite.correctEntityClass) {
@@ -43,7 +43,7 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
     }
 
     @Override
-    public T load(long id, Class clazz) throws SQLException {
+    public <T> T load(long id, Class<T> clazz) throws SQLException {
         if(clazz != null){
             EntityDecomposite entityDecomposite = findOrCreateEntityDecomposite(clazz);
             if(entityDecomposite.correctEntityClass){
@@ -77,7 +77,7 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
     }
 
     @Override
-    public void createOrUpdate(T object) throws SQLException {
+    public <T> void createOrUpdate(T object) throws SQLException {
         if(object != null){
             EntityDecomposite entityDecomposite = findOrCreateEntityDecomposite(object.getClass());
             if(entityDecomposite.correctEntityClass){
@@ -97,10 +97,10 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
         if(clazz != null){
             EntityDecomposite entityDecomposite = findOrCreateEntityDecomposite(clazz);
             if(entityDecomposite.correctEntityClass){
-                Optional<T> result = executor.select(entityDecomposite.getSelectForExistsSql(), id, resultSet->{
+                Optional result = executor.select(entityDecomposite.getSelectForExistsSql(), id, resultSet->{
                     try {
                         if(resultSet.next()){
-                            return (T) new Object();
+                            return new Object();
                         } else {
                             return null;
                         }
@@ -119,11 +119,8 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
     }
 
     private EntityDecomposite findOrCreateEntityDecomposite(Class clazz){
-        EntityDecomposite entityDecomposite = decomposites.stream()
-                .filter(it->it.getClazz() == clazz)
-                .findFirst()
-                .orElse(new EntityDecomposite(clazz));
-        decomposites.add(entityDecomposite);
+        EntityDecomposite entityDecomposite = decomposites.getOrDefault(clazz, new EntityDecomposite(clazz));
+        decomposites.put(clazz, entityDecomposite);
         return entityDecomposite;
     }
 }

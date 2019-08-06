@@ -8,7 +8,7 @@ import java.util.function.Function;
 /**
  * Created by Alexandr Byankin on 22.07.2019
  */
-public class DbExecutorImpl<T> implements DbExecutor<T> {
+public class DbExecutorImpl implements DbExecutor {
 
     private final Connection connection;
 
@@ -32,12 +32,15 @@ public class DbExecutorImpl<T> implements DbExecutor<T> {
     }
 
     @Override
-    public Optional<T> select(String sql, long id, Function<ResultSet, T> rsHandler) throws SQLException {
-        try (PreparedStatement pst = this.connection.prepareStatement(sql)) {
+    public <T> Optional<T> select(String sql, long id, Function<ResultSet, T> rsHandler){
+        try (PreparedStatement pst = connection.prepareStatement(sql)) {
             pst.setLong(1, id);
             try (ResultSet rs = pst.executeQuery()) {
                 return Optional.ofNullable(rsHandler.apply(rs));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Optional.empty();
         }
     }
 
