@@ -94,31 +94,21 @@ public class JdbcTemplateImpl implements JdbcTemplate {
 
     @Override
     public boolean isExists(long id, Class clazz) throws SQLException {
-        if(clazz != null){
-            EntityDecomposite entityDecomposite = findOrCreateEntityDecomposite(clazz);
-            if(entityDecomposite.correctEntityClass){
-                Optional result = executor.select(entityDecomposite.getSelectForExistsSql(), id, resultSet->{
-                    try {
-                        if(resultSet.next()){
-                            return new Object();
-                        } else {
+        return Optional.ofNullable(findOrCreateEntityDecomposite(clazz))
+                .filter(e -> e.correctEntityClass)
+                .flatMap(e -> executor.select(e.getSelectForExistsSql(), id, resultSet -> {
+                            try {
+                                return (resultSet.next() ?  new Object() : null);
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                            }
                             return null;
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-                });
-                return !result.isEmpty();
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
+                        })
+                ).isPresent();
     }
 
     private EntityDecomposite findOrCreateEntityDecomposite(Class clazz){
+        if(clazz == null) return null;
         EntityDecomposite entityDecomposite = decomposites.getOrDefault(clazz, new EntityDecomposite(clazz));
         decomposites.put(clazz, entityDecomposite);
         return entityDecomposite;
