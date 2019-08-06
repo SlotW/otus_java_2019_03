@@ -1,9 +1,6 @@
 package ru.otus.writer;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import javax.json.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -94,21 +91,31 @@ public class JsonWriterCustom {
             e.printStackTrace();
         }
         if (fieldObject != null){
-            Class clazzFieldObject = fieldObject.getClass();
-            if(Integer.class.equals(clazzFieldObject)) jsonObjectBuilder.add(field.getName(), (int) fieldObject);
-            if (Short.class.equals(clazzFieldObject)) jsonObjectBuilder.add(field.getName(), (short) fieldObject);
-            if (Byte.class.equals(clazzFieldObject)) jsonObjectBuilder.add(field.getName(), (byte) fieldObject);
-            if (Long.class.equals(clazzFieldObject)) jsonObjectBuilder.add(field.getName(), (long) fieldObject);
-            if (Boolean.class.equals(clazzFieldObject)) jsonObjectBuilder.add(field.getName(), (boolean) fieldObject);
-            if (Character.class.equals(clazzFieldObject)) jsonObjectBuilder.add(field.getName(), (char) fieldObject);
-            if (Float.class.equals(clazzFieldObject))jsonObjectBuilder.add(field.getName(), (float) fieldObject);
-            if (Double.class.equals(clazzFieldObject)) jsonObjectBuilder.add(field.getName(), (double) fieldObject);
+            jsonObjectBuilder.add(field.getName(), convertToJsonValue(fieldObject));
         }
         return jsonObjectBuilder;
     }
 
+    private static JsonValue convertToJsonValue(Object primitiveObject){
+        Class clazzFieldObject = primitiveObject.getClass();
+        JsonValue jsonValue = null;
+        if(Integer.class.equals(clazzFieldObject) || Short.class.equals(clazzFieldObject) || Byte.class.equals(clazzFieldObject)) jsonValue = Json.createValue((int) primitiveObject);
+        if (Long.class.equals(clazzFieldObject)) jsonValue = Json.createValue((long) primitiveObject);
+        if (Character.class.equals(clazzFieldObject)) jsonValue = Json.createValue((String) primitiveObject);
+        if (Float.class.equals(clazzFieldObject) || Double.class.equals(clazzFieldObject))jsonValue = Json.createValue((double) primitiveObject);
+        if (Boolean.class.equals(clazzFieldObject)){
+            if((boolean) primitiveObject) {
+                jsonValue = JsonValue.TRUE;
+            } else {
+                jsonValue = JsonValue.FALSE;
+            }
+        }
+        return jsonValue;
+    }
+
     private static JsonArrayBuilder getJsonArrayBuilder(Field field, Object obj){
         JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+
         Object array = null;
         try {
             array = field.get(obj);
@@ -121,14 +128,7 @@ public class JsonWriterCustom {
             int sizeArr = Array.getLength(array);
             for(int i = 0; i < sizeArr; i++){
                 if(clazzType.isPrimitive()) {
-                    if(int.class.equals(clazzType)) jsonArrayBuilder.add(Array.getInt(array, i));
-                    if(byte.class.equals(clazzType)) jsonArrayBuilder.add(Array.getByte(array, i));
-                    if(short.class.equals(clazzType)) jsonArrayBuilder.add(Array.getShort(array, i));
-                    if (long.class.equals(clazzType)) jsonArrayBuilder.add(Array.getLong(array, i));
-                    if (boolean.class.equals(clazzType)) jsonArrayBuilder.add(Array.getBoolean(array, i));
-                    if (double.class.equals(clazzType)) jsonArrayBuilder.add(Array.getDouble(array, i));
-                    if (float.class.equals(clazzType)) jsonArrayBuilder.add(Array.getFloat(array, i));
-                    if (char.class.equals(clazzType)) jsonArrayBuilder.add(Array.getChar(array, i));
+                    jsonArrayBuilder.add(convertToJsonValue(Array.get(array, i)));
                 } else if (String.class.equals(clazzType)) {
                     jsonArrayBuilder.add((String) Array.get(array, i));
                 } else {

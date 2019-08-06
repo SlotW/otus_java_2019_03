@@ -12,6 +12,7 @@ public class Something {
     private final List<Parameter> listParameters;
     private final long[] arrLong;
     private final String[] arrString;
+    private static final int CONST = 204;
 
     public Something(int number, String name, boolean isPrim,
                      Parameter isNormal, Parameter[] arrayParameters,
@@ -38,6 +39,7 @@ public class Something {
                 ((listParameters != null && !listParameters.isEmpty()) ? ("listParameters=" + listParameters.toString()) : "") + "," +
                 ("arrLong=" + Arrays.toString(arrLong) + ",") +
                 ("arrString=" + Arrays.toString(arrString) + ",") +
+                "CONST=" + CONST + "," +
                 "}"; }
 
 }
