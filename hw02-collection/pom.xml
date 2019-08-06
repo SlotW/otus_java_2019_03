@@ -34,7 +34,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>ru.otus.l021.Runner</mainClass>
+                            <mainClass>ru.ru.otus.l021.Runner</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
