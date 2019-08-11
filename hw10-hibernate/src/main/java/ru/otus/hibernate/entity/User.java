@@ -11,14 +11,18 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private long id;
+    @Column(name = "name", nullable = false, length = 150)
     private String name;
+    @Column(name = "age", nullable = false)
     private int age;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private List<Phone> phones;
 
     public long getId() {

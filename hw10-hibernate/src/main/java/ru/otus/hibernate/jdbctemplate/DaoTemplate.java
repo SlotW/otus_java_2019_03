@@ -2,7 +2,7 @@ package ru.otus.hibernate.jdbctemplate;
 
 import java.sql.SQLException;
 
-public interface JdbcTemplate {
+public interface DaoTemplate {
 
     <T> void create(T object);
     <T> void update(T object);
