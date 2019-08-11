@@ -13,7 +13,7 @@ public class Phone {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
-    @Column(name = "number", length = 20)
+    @Column(name = "number", length = 20, nullable = false)
     private String number;
 
     public Long getId() {
