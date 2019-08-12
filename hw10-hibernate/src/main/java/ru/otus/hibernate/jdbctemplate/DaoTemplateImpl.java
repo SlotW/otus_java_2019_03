@@ -44,10 +44,15 @@ public class DaoTemplateImpl implements DaoTemplate {
 
     @Override
     public <T> T load(long id, Class<T> clazz) {
-        T selected;
+        T selected = null;
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            selected = session.get(clazz, id);
+            try{
+                session.beginTransaction();
+                selected = session.get(clazz, id);
+            } catch (RuntimeException ex){
+                session.getTransaction().rollback();
+                ex.printStackTrace();
+            }
         }
         return selected;
     }
